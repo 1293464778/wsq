@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>交易中心</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+
+</head>
+<body class="bgcolor">
+<div class="mynav">
+    <ul class="clearfix">
+        <li><a href="javascript:void(0)" tapmode onclick="chushouopen()" class="clearfix arrright"><img src="../../image/jiaonav_1.png" alt=""> 出售果实</a></li>
+        <li><a href="javascript:void(0)" tapmode onclick="jiaojiopen()" class="clearfix arrright"><img src="../../image/jiaonav_2.png" alt=""> 交易记录</a></li>
+        <li><a href="javascript:void(0)" tapmode onclick="zhuanhuaopen()" class="clearfix arrright"><img src="../../image/jiaonav_3.png" alt=""> 种子转果实</a></li>
+        <li><a href="javascript:void(0)" tapmode onclick="zhuanjiluopen()" class="clearfix arrright"><img src="../../image/jiaonav_4.png" alt=""> 转化记录</a></li>
+
+
+    </ul>
+</div>
+
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        //激活tapmode属性
+        api.parseTapmode();
+        infoget(4);//获取重置果园提示
+        infoget(5);//定向出售提示
+        infoget(6);//获取发布站内信提示
+        infoget(8);//委托出售提示
+    };
+
+    function chushouopen(){
+        api.openWin({
+            name: 'ermi',
+            url: '../guoyuan/ermi_head.html',
+            opaque: false,
+            vScrollBarEnabled: true,
+            pageParam:{
+                'pagename':'../jiaoyi/chushou_head.html'
+            }
+        });
+    }
+
+    function jiaojiopen(){
+        api.openWin({
+            name: 'ermi',
+            url: '../guoyuan/ermi_head.html',
+            opaque: false,
+            vScrollBarEnabled: true,
+            pageParam:{
+                'pagename':'../jiaoyi/jiaojilu_head.html'
+            }
+        });
+    }
+
+    function zhuanhuaopen(){
+        api.openWin({
+            name: 'ermi',
+            url: '../guoyuan/ermi_head.html',
+            opaque: false,
+            vScrollBarEnabled: true,
+            pageParam:{
+                'pagename':'../jiaoyi/zhuanhua_head.html'
+            }
+        });
+    }
+
+    function zhuanjiluopen(){
+        api.openWin({
+            name: 'ermi',
+            url: '../guoyuan/ermi_head.html',
+            opaque: false,
+            vScrollBarEnabled: true,
+            pageParam:{
+                'pagename':'../jiaoyi/zhuanjilu_head.html'
+            }
+        });
+    }
+
+
+
+</script>
+</html>

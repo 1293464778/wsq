@@ -1,0 +1,161 @@
+<extend name="Public:base" />
+<!-- 标题 -->
+<block name="title"><title>系统配置</title></block>
+<!-- 面包屑导航 -->
+<block name="navigation">
+<section class="content-header">
+    <h1>系统配置<small></small></h1>
+    <ol class="breadcrumb">
+        <li><a href="{:U('Index/index')}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li class="active">系统配置</li>
+    </ol>
+</section>
+</block> 
+
+<!-- 内容 -->
+<block name="content">
+<!-- Custom Tabs -->
+<div class="nav-tabs-custom" style="height:800px;">
+    
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab_1" data-toggle="tab">系统配置</a></li>
+        <li><a href="#tab_2" data-toggle="tab">其他配置</a></li>
+    </ul>
+    
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab_1" style="max-width:800px;">
+                <form role="form" action="{:U('Config/level')}" id="level">
+                    <table id="example" class="table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0" style="width:50%;float:left;margin-top:10px;">
+                        <thead>
+                        <tr><th >一级贫农对应的收益率</th><td><input type="text"  id="config_value1" name="config_value[]" value="{$data.0.value}" autocomplete="off" ></td></tr>
+                        <tr><th>二级中农对应的收益率</th><td><input type="text"  id="config_value2" name="config_value[]" value="{$data.1.value}" autocomplete="off" ></td></tr>
+                        <tr><th>三级中上农对应的收益率</th><td><input type="text"  id="config_value3" name="config_value[]" value="{$data.2.value}" autocomplete="off" ></td></tr>
+                        <tr><th>四级富农对应的收益率</th><td><input type="text" id="config_value4" name="config_value[]" value="{$data.3.value}" autocomplete="off" ></td></tr>
+                        <tr><th>五级农场主对应的收益率</th><td><input type="text"  id="config_value5" name="config_value[]" value="{$data.4.value}" autocomplete="off" ></td></tr>
+                        <tr><th>六级庄园主对应的收益率</th><td><input type="text"  id="config_value6" name="config_value[]" value="{$data.5.value}" autocomplete="off" ></td></tr>
+                        <tr><th>七级地产主对应的收益率</th><td><input type="text"  id="config_value7" name="config_value[]" value="{$data.6.value}" autocomplete="off" ></td></tr>
+                        <tr><th>操作</th><td><button class="btn btn-success" type="submit">保存</button> </td></tr>
+                        </thead>
+                    </table>
+                </form>
+
+            <form role="form" action="{:U('Config/farm')}"  id="farm">
+                <table id="example1" class="table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0" style="width:50%;float:right;margin-top:10px;">
+                    <thead>
+                    <tr><th >普通土地需要果实基数</th><td><input type="text"  name="config_value[]" value="{$data1.0.value}" autocomplete="off" ></td></tr>
+                    <tr><th>金土地需要果实基数</th><td><input type="text"   name="config_value[]" value="{$data1.1.value}" autocomplete="off" ></td></tr>
+                    <tr><th>系统每天派发化肥比例</th><td><input type="text"   name="config_value[]" value="{$data1.2.value}" autocomplete="off" ></td></tr>
+                    <tr><th>好友采蜜为好友化肥数量的比例</th><td><input type="text"   name="config_value[]" value="{$data1.3.value}" autocomplete="off" ></td></tr>
+                    <tr><th>施肥1对应增加果实的数量</th><td><input type="text"   name="config_value[]" value="{$data1.4.value}" autocomplete="off" ></td></tr>
+                    <tr><th>系统每天派发的收益比例</th><td><input type="text"   name="config_value[]" value="{$data1.5.value}" autocomplete="off" ></td></tr>
+                    <tr><th>种子转化果实的比例</th><td><input type="text"   name="config_value[]" value="{$data1.6.value}" autocomplete="off" ></td></tr>
+                    <tr><th>土地果实不收益达到基数的倍数</th><td><input type="text"   name="config_value[]" value="{$data1.7.value}" autocomplete="off" ></td></tr>
+                    <tr><th>操作</th><td><button class="btn btn-success" type="submit">保存</button> </td></tr>
+                    </thead>
+                </table>
+            </form>
+        </div><!-- /.tab-pane -->
+
+        <div class="tab-pane" id="tab_2" style="max-width:800px;">
+            <form role="form" action="{:U('Config/prop')}"  id="prop" >
+                <table id="example2" class="table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0" style="width:50%;float:left;margin-top:10px;">
+                    <thead>
+                    <tr><th >1条狗增加的收益率</th><td><input type="text"  name="config_value[]" value="{$data2.0.value}" autocomplete="off" ></td></tr>
+                    <tr><th>1个稻草人增加的收益率</th><td><input type="text"   name="config_value[]" value="{$data2.1.value}" autocomplete="off" ></td></tr>
+                    <tr><th>增加1个稻草人需要推荐的人数</th><td><input type="text"   name="config_value[]" value="{$data2.2.value}" autocomplete="off" ></td></tr>
+                    <tr><th>增加1条狗需要施肥的总数</th><td><input type="text"   name="config_value[]" value="{$data2.3.value}" autocomplete="off" ></td></tr>
+                    <tr><th>稻草人上限的数量</th><td><input type="text"   name="config_value[]" value="{$data2.4.value}" autocomplete="off" ></td></tr>
+                    <tr><th>狗上限的数量</th><td><input type="text"   name="config_value[]" value="{$data2.5.value}" autocomplete="off" ></td></tr>
+                   <tr><th>操作</th><td><button class="btn btn-success" type="submit">保存</button> </td></tr>
+                    </thead>
+                </table>
+            </form>
+            <form role="form" action="{:U('Config/recommen')}"  id="recommen">
+                <table id="example3" class="table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0" style="width:50%;float:right;margin-top:10px;">
+                    <thead>
+                    <tr><th >账号申请需要达到的果实数量</th><td><input type="text"  name="config_value[]" value="{$data3.0.value}" autocomplete="off" ></td></tr>
+                    <tr><th>委托出售平台收取佣金的比例</th><td><input type="text"   name="config_value[]" value="{$data3.1.value}" autocomplete="off" ></td></tr>
+                    <tr><th>定向出售平台收取佣金的比例</th><td><input type="text"   name="config_value[]" value="{$data3.2.value}" autocomplete="off" ></td></tr>
+                    <tr><th>发布一次站内信需要果实的数量</th><td><input type="text"   name="config_value[]" value="{$data3.3.value}" autocomplete="off" ></td></tr>
+                    <tr><th>推荐1人赠送的种子数量</th><td><input type="text"   name="config_value[]" value="{$data3.4.value}" autocomplete="off" ></td></tr>
+                    <tr><th>定向、委托出售可出售的比例</th><td><input type="text"   name="config_value[]" value="{$data3.5.value}" autocomplete="off" ></td></tr>
+
+                    <tr><th>操作</th><td><button class="btn btn-success" >保存</button> </td></tr>
+                    </thead>
+                </table>
+            </form>
+        </div><!-- /.tab-pane -->
+
+    </div><!-- /.tab-content -->
+</div><!-- nav-tabs-custom -->
+ 
+
+</block>
+
+<!-- js -->
+<block name="js">
+     
+    <script type="text/javascript">
+        //表单提交
+        $(document)
+            .ajaxStart(function(){
+                $("button:submit").addClass("btn-default").removeClass('btn-primary').attr("disabled", true);
+            })
+            .ajaxStop(function(){
+                $("button:submit").removeClass("btn-default").addClass("btn-primary").attr("disabled", false);
+            });
+
+        $("#level").submit(function(){
+            var self = $(this);
+            $.post(self.attr("action"), self.serialize(), success, "json");
+            return false;
+        });
+        $("#farm").submit(function(){
+            var self = $(this);
+            $.post(self.attr("action"), self.serialize(), success, "json");
+            return false;
+        });
+        $("#prop").submit(function(){
+            var self = $(this);
+            $.post(self.attr("action"), self.serialize(), success, "json");
+            return false;
+        });
+        $("#recommen").submit(function(){
+            var self = $(this);
+            $.post(self.attr("action"), self.serialize(), success, "json");
+            return false;
+
+        });
+        function success(data){
+            if(data.status){
+                layer.msg(data.info, {
+                    icon:1,
+                    offset: 0,
+                    shift: 0,
+                    time:1500
+                },function(){
+
+                });
+            } else {
+                layer.msg(data.info, {
+                    icon:0,
+                    offset: 0,
+                    shift: 6,
+                    time:1500
+                });
+
+            }
+        }
+    </script>
+    <link rel="stylesheet"  href="__ROOT__/Public/Static/Huploadify/Huploadify.css" >
+    <script charset="utf-8" src="__ROOT__/Public/Static/Huploadify/jquery.Huploadify.js"></script>
+    <script charset="utf-8" src="__ROOT__/Public/Static/Huploadify/Huploadify.js"></script>
+    <script>
+      $(function(){
+          var upUrl = "{:U('upfile')}";
+          var delUrl = "{:U('delfile')}";
+          var file = "{$version.file}";
+          upfile("file","file",upUrl,delUrl, file);
+       });
+   </script>
+</block>

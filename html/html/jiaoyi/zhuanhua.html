@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>转化</title>
+    <link rel="stylesheet" type="text/css" href="../../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../script/doT.js"></script>
+    <script type="text/javascript" src="../../layer/layer.js"></script>
+</head>
+<body class="bgcolor">
+
+<div class="guosbox">
+
+
+    <div class="guosbbx">
+        <ul>
+            <li>
+                <span>种子余量</span>
+                <p class="seednum">0.00</p>
+            </li>
+            <li>
+                <span>兑换数量</span>
+                <p class="seedOnNum"><input type="number" placeholder="请输入兑换数量" onkeyup= "if(!/^\d+(\.\d{0,2})?$/.test(this.value)){if(this.value!=''){layer.open({content: '只能输入数字，小数点后只能保留两位',btn: '我知道了'});this.value='';}}"></p>
+            </li>
+
+        </ul>
+
+        <div class="surebtn"><a href="#"><img src="../../image/surebtn.png" alt=""></a> </div>
+    </div>
+</div>
+
+
+
+
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+<script type="text/javascript">
+
+    var token = tokenmake();
+    apiready = function () {
+        //激活tapmode属性
+        api.parseTapmode();
+
+        var userAccessToken = $api.getStorage('userAccessToken');
+        var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken));
+        function chushiseed(){
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Order/getSeed',
+                method: 'get',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.status){
+                        var seedNum = ret.data;
+                        $('.seednum').html(seedNum);
+                    }else {
+                        layer.open({
+                            content: ret.msg,
+                            skin: 'msg',
+                            time: 2
+                        });
+                    }
+
+
+                } else {
+                    alert(err.msg);
+                }
+            });
+        }
+
+        chushiseed();
+
+
+        //兑换btn
+
+        $('.surebtn').click(function(){
+
+            var seedOnNum = parseFloat($('.seedOnNum').find('input').val());
+            var seednum_n = $('.seednum').html();
+
+            if(seedOnNum==''||seedOnNum==0){
+                layer.open({
+                    content: '请填写要兑换的数量',
+                    skin: 'msg',
+                    time: 2
+                });
+
+                return;
+            }
+
+            if(seedOnNum>seednum_n){
+                layer.open({
+                    content: '超出允许最大值',
+                    skin: 'msg',
+                    time: 2
+                });
+                return;
+            }
+            qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken),('seed_num='+seedOnNum));
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Order/seedTofruit',
+                method: 'POST',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken,
+                        seed_num: seedOnNum
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    layer.open({
+                        content: ret.msg,
+                        skin: 'msg',
+                        time: 2
+                    });
+                    chushiseed();
+                    $('.seedOnNum').find('input').val('');
+
+
+                } else {
+                    alert(err.msg);
+                }
+            });
+
+        });
+
+
+
+
+
+
+
+
+
+    };
+
+</script>
+</html>

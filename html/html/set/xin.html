@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>站内信</title>
+    <link rel="stylesheet" type="text/css" href="../../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../script/doT.js"></script>
+    <script type="text/javascript" src="../../layer/layer.js"></script>
+
+</head>
+<body class="bgcolor">
+<div class="guosbbx">
+    <ul>
+
+        <li class="title_t">
+            <span style="width: 20vw;">主题</span>
+            <p><input type="text" placeholder="请输入主题"></p>
+        </li>
+        <li class="phone_t">
+            <span style="width: 20vw;">联系电话</span>
+            <p><input type="tel" placeholder="请输入您的联系电话"></p>
+        </li>
+        <li class="textareali nei_t">
+            <span>内容</span>
+            <p><textarea placeholder="请输入内容"></textarea></p>
+        </li>
+        <li class="textareali">
+            <span>图片上传</span>
+            <div class="imglistbv clearfix">
+                <div class="imginputbx">
+
+
+                </div>
+
+                <div class="imgbbx">
+                    <b class="inputbx" onclick="showAction();"><img src="../../image/addimgbtn.png" alt=""></b>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <p class="chustext"></p>
+
+
+    <div class="surebtn"><a href="#"><img src="../../image/surebtn.png" alt=""></a> </div>
+</div>
+
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+<script type="text/javascript">
+    var token = tokenmake();
+    var userAccessToken = $api.getStorage('userAccessToken');
+
+    apiready = function () {
+        //激活tapmode属性
+        api.parseTapmode();
+
+        //提示信息获取
+        var datainfor = $api.getStorage('infor6');
+        $('.chustext').html(datainfor);
+
+
+        api.addEventListener({
+            name:'viewappear'
+        }, function(ret, err){
+            qingk();
+        });
+
+        function qingk(){
+            $('.title_t').find('input').val('');
+            $('.nei_t').find('textarea').val('');
+            $('.phone_t').find('input').val('');
+            $('.imginputbx').html('');
+        }
+
+        $('.surebtn').click(function(){
+
+            var title_t = $('.title_t').find('input').val();
+            var content_t = $('.nei_t').find('textarea').val();
+            var phone_t = $('.phone_t').find('input').val();
+
+            if(title_t==''){
+                layer.open({
+                    content: '请输入主题',
+                    skin: 'msg',
+                    time: 2
+                });
+                return;
+            }
+
+            if(phone_t==''){
+                layer.open({
+                    content: '请输入联系电话',
+                    skin: 'msg',
+                    time: 2
+                });
+                return;
+            }
+            if(content_t==''){
+                layer.open({
+                    content: '请输入内容',
+                    skin: 'msg',
+                    time: 2
+                });
+                return;
+            }
+            var loading = layer.open({type: 2});
+            var file_t =[];
+            $('.imginputbx').find('img').each(function(){
+                file_t.push($(this).attr('src'))
+            });
+
+
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Index/mail',
+                method: 'post',
+                dataType:'json',
+                timeout:90,
+                //report:true,
+                data: {
+                    values: {
+                        userAccessToken: userAccessToken,
+                        title: title_t,
+                        content: content_t,
+                        phone: phone_t
+
+                    },
+                    files: {
+                        'file[]': file_t
+
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    //alert(ret.msg);
+
+                        if(ret.status==1){
+                                layer.close(loading);
+                                qingk();
+                                layer.open({
+                                    content: ret.msg,
+                                    skin: 'msg',
+                                    time: 2
+                                });
+
+
+                        }else {
+
+                            layer.close(loading);
+                            layer.open({
+                                content: ret.msg,
+                                skin: 'msg',
+                                time: 2
+                            });
+                        }
+
+
+                } else {
+                    layer.close(loading);
+                    alert(err.msg);
+                }
+
+            });
+
+
+
+        });
+
+
+    };
+    //删除图片
+    $('.imginputbx').on('click','.imgbbx a',function(){
+        $(this).closest('.imgbbx').remove();
+    });
+
+    function showAction(){
+        api.actionSheet({
+            title: '上传图片',
+            cancelTitle: '取消',
+            buttons: ['拍照','从手机相册选择']
+        }, function(ret, err) {
+            if (ret) {
+                getPicture(ret.buttonIndex);
+            }
+        });
+    }
+
+
+
+
+    function getPicture(sourceType) {
+        if(sourceType==1){ // 拍照
+            //获取一张图片
+            api.getPicture({
+                sourceType: 'camera',
+                encodingType: 'png',
+                mediaValue: 'pic',
+                allowEdit: false,
+                quality: 90,
+                saveToPhotoAlbum: true
+            }, function(ret, err) {
+                // 获取拍照数据并处理
+                if (ret) {
+                    var imgSrc = ret.data;
+
+                    if (imgSrc != "") {
+                        var imgdom = "<div class='imgbbx'><img src='"+imgSrc+"' alt=''><a href='javascript:void(0)'>×</a></div>";
+                        $('.imginputbx').append(imgdom);
+
+                    }
+                }
+            });
+        }
+        else if(sourceType==2){ // 从相机中选择
+            //UIMediaScanner 是一个多媒体扫描器，可扫描系统的图片、视频等多媒体资源
+            var obj = api.require('UIMediaScanner');
+            obj.open({
+                //返回的资源种类,picture（图片）,video（视频）,all（图片和视频）
+                type: 'picture',
+                //（可选项）图片显示的列数，须大于1
+                column: 4,
+                max: 8,
+                //（可选项）图片排序方式,asc（旧->新）,desc（新->旧）
+                sort: {
+                    key: 'time',
+                    order: 'desc'
+                },
+                //（可选项）模块各部分的文字内容
+                texts: {
+                    stateText: '已选择*项',
+                    finishText: '完成',
+                    cancelText: '取消'
+                },
+                styles: {
+                    bg: '#fff',
+                    mark: {
+                        icon: '',
+                        position: 'bottom_right',
+                        size: 20
+                    },
+                    nav: {
+                        bg: '#2B2B2B',
+                        stateColor: '#fff',
+                        stateSize: 18,
+                        cancleBg: 'rgba(0,0,0,0)',
+                        cancelColor: '#fff',
+                        cancelSize: 18,
+                        finishBg: 'rgba(0,0,0,0)',
+                        finishColor: '#fff',
+                        finishSize: 18
+                    }
+                }
+            }, function(ret) {
+                // 获取图片数据并处理
+                if (ret) {
+                    if (ret.list) {
+                        var arrret = ret.list;
+                        for(var i=0;i<arrret.length;i++){
+                            var imgdom = "<div class='imgbbx'><img src='"+arrret[i].path+"' alt=''><a href='javascript:void(0)'>×</a> </div>";
+                            $('.imginputbx').append(imgdom);
+                        }
+
+
+                    }
+                }
+            });
+        }
+    }
+
+
+</script>
+</html>

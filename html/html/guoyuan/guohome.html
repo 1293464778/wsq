@@ -1,0 +1,891 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的果园</title>
+    <link rel="stylesheet" type="text/css" href="../../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../script/doT.js"></script>
+    <script type="text/javascript" src="../../layer/layer.js"></script>
+
+    <style>
+        html,body {
+            width: 100vw;
+            height: 100%;
+            overflow-x: hidden;
+            background: #78C41A url("../../image/nongbg.png") no-repeat center top;
+            background-size: 100% auto;
+        }
+        .guohomebx{
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+<body class="bgcolor">
+
+<div class="guohomebx">
+
+    <div class="tophom clearfix">
+        <script id="intertmpl" type="text/x-dot-template">
+        <ul>
+            <li>
+                <a href="#" class="clearfix">
+                    <b class="centerboth"><img src="../../image/homenavl1.png" alt=""></b>
+                    <div class="thtext">
+                        <h2>总量</h2>
+                        <p>{{=it.totalNum}}</p>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="#" class="clearfix">
+                    <b class="centerboth"><img src="../../image/homenavl2.png" alt=""></b>
+                    <div class="thtext">
+                        <h2>肥料</h2>
+                        <p>{{=it.totalFertilizer}}</p>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="#" class="clearfix">
+                    <b class="centerboth"><img src="../../image/homenavl3.png" alt=""></b>
+                    <div class="thtext">
+                        <h2>种子</h2>
+                        <p>{{=it.seed}}</p>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="#" class="clearfix">
+                    <b class="centerboth"><img src="../../image/homenavl4.png" alt=""></b>
+                    <div class="thtext">
+                        <h2>蜂蜜</h2>
+                        <p>{{=it.friendNum}}</p>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="#" class="clearfix">
+                    <b class="centerboth"><img src="../../image/homenavl5.png" alt=""></b>
+                    <div class="thtext">
+                        <h2>稻草人</h2>
+                        <p>{{=it.scarecrow}}</p>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="#" class="clearfix">
+                    <b class="centerboth"><img src="../../image/homenavl6.png" alt=""></b>
+                    <div class="thtext">
+                        <h2>狗</h2>
+                        <p>{{=it.dog}}</p>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="#" class="clearfix">
+                    <b class="centerboth"><img src="../../image/homenavl7.png" alt=""></b>
+                    <div class="thtext">
+                        <h2>仓库果实</h2>
+                        <p>{{=it.houseFruit}}</p>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a href="#" class="clearfix">
+                    <b class="centerboth"><img src="../../image/homenavl8.png" alt=""></b>
+                    <div class="thtext">
+                        <h2>总生长</h2>
+                        <p>{{=it.totalGrow}}</p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+        </script>
+    </div>
+
+
+    <!--身份-->
+    <div class="shengf centerboth">
+        <img src="../../image/shengfen_pn.png" alt="">
+        <span>贫农</span>
+    </div>
+    <!--地面-->
+    <div class="dimbbx">
+        <div class="dimian">
+            <ul>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+            </ul>
+        </div>
+    </div>
+
+    <!--稻草人-->
+    <div class="daocaobx">
+        <ul>
+            <li><a class="" href="javascript:void(0)"></a></li>
+            <li><a class="" href="javascript:void(0)"></a></li>
+            <li><a class="" href="javascript:void(0)"></a></li>
+            <li><a class="" href="javascript:void(0)"></a></li>
+        </ul>
+    </div>
+    <!--狗-->
+    <div class="dogbox">
+        <div class="dogbg"><img src="../../image/dog1.png" alt=""></div>
+        <div class="dogbg"><img src="../../image/dog2.png" alt=""></div>
+    </div>
+    <!--人-->
+    <div class="manbgbox"></div>
+    <!--底部按钮-->
+    <div class="foothmbg">
+        <ul>
+            <li data-zt="0"><a href="javascript:void(0)"><img src="../../image/homeb1.png" alt=""><b>开垦</b></a></li>
+            <li data-zt="1"><a href="javascript:void(0)"><img src="../../image/homeb2.png" alt=""><b>播种</b></a></li>
+            <li data-zt="2"><a href="javascript:void(0)"><img src="../../image/homeb3.png" alt=""><b>施肥</b></a></li>
+            <li data-zt="3"><a href="javascript:void(0)"><img src="../../image/homeb4.png" alt=""><b>收割</b></a></li>
+            <li data-zt="4"><a href="javascript:void(0)"><img src="../../image/homeb5.png" alt=""><b>采蜜</b></a></li>
+            <li data-zt="5"><a href="javascript:void(0)"><img src="../../image/homeb6.png" alt=""><b>刷新</b></a></li>
+        </ul>
+    </div>
+
+    <!--施肥-->
+    <div class="shifeibx" style="display: none">
+        <div class="guanzi"><img src="../../image/shifei1.png" alt=""></div>
+        <div class="shuidi"><img src="../../image/shifei2.png" alt=""></div>
+    </div>
+
+
+    <!--播种-->
+    <div class="alert_bozheng bozhong" style="display: none">
+        <img src="../../image/alert_bozhong.png" alt="">
+        <div class="alertbbc">
+            <div class="clearfix"><span>数量</span><p><input type="number" onkeyup= "if(!/^\d+(\.\d{0,2})?$/.test(this.value)){if(this.value!=''){layer.open({content: '只能输入数字，小数点后只能保留两位',btn: '我知道了'});this.value='';}}"></p></div>
+            <p class="alertsurebtn"><a href="#">确认</a> </p>
+        </div>
+    </div>
+    <!--收割-->
+    <div class="alert_bozheng shouge" style="display: none">
+        <img src="../../image/alert_shouge.png" alt="">
+        <div class="alertbbc">
+            <div class="clearfix"><span>数量</span><p><input type="number" placeholder="" onkeyup= "if(!/^\d+(\.\d{0,2})?$/.test(this.value)){if(this.value!=''){layer.open({content: '只能输入数字，小数点后只能保留两位',btn: '我知道了'});this.value='';}}"></p></div>
+            <p class="alertsurebtn"><a href="#">确认</a> </p>
+        </div>
+    </div>
+
+
+</div>
+
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+
+<script>
+    apiready = function () {
+    // 通过dot.template调用你所写的dot.JS。
+    var tmpl = doT.template($("#intertmpl")[0].text);
+    var homedata;//首页数据
+    if($api.getStorage('homejson')) {
+        homedata = $api.getStorage('homejson');
+        // 将数据扔进templ中。并在DIV中显示出来
+        $(".tophom").html(tmpl(homedata));
+        //indland(homedata);
+    }else {
+        homedata = {}
+    }
+    var landnum;
+    if(homedata!=''){
+        landnum =homedata.landNum;//土地数量
+    }else {
+        landnum =0;
+    }
+
+    var token = tokenmake();
+
+
+        //激活tapmode属性
+        api.parseTapmode();
+
+        var userAccessToken = $api.getStorage('userAccessToken');
+       // var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken));
+        var loading = layer.open({type: 2});
+        //数据绑定
+        var kaiken_layer;
+        function intedate(){
+            var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken));
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Garden/index',
+                method: 'get',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    layer.close(loading);
+                    layer.close(kaiken_layer);
+                    if(ret.status==1){
+                        $api.setStorage('homejson',ret.data);
+                        homedata = ret.data;
+                        landnum =homedata.landNum;
+
+                        // 将数据扔进templ中。并在DIV中显示出来
+                        $(".tophom").html(tmpl(ret.data));
+
+                        levelshow();//等级数据展示
+                        indland(ret.data);
+                    }else {
+                        layer.open({
+                            content: '初始化失败',
+                            skin: 'msg',
+                            time: 2
+                        });
+                    }
+
+
+                } else {
+                    alert(err.msg);
+                }
+            });
+        }
+
+        intedate();
+
+        //等级展示
+        function levelshow(){
+            var leveldata = ['贫农','中农','中上农','富农','农场主','庄园主','地产主'];
+
+            $api.setStorage('leveldata',leveldata);
+
+            var levelnum = homedata.level;
+            var htmllevel = leveldata[levelnum-1];
+            $('.shengf').find('span').html(htmllevel);
+        }
+        //等级展示结束
+
+
+
+
+    //地面初始化数据
+    function indland(data_home){
+        //狗
+        //alert(JSON.stringify(data_home));
+        if(data_home.dog){
+            var dogdata = data_home.dog;
+            if(dogdata==0) {
+                $('.dogbox').find('.dogbg').removeClass('add');
+            }else if(dogdata==1) {
+                $('.dogbox').find('.dogbg').removeClass('add');
+                $('.dogbox').find('.dogbg').eq(0).addClass('add');
+            }else {
+                $('.dogbox').find('.dogbg').addClass('add');
+            }
+        }
+
+        //稻草人
+        if(data_home.scarecrow){
+            var daocaodata = data_home.scarecrow;
+            for(var j =0;j<daocaodata;j++){
+                $('.daocaobx').find('li').eq(j).find('a').addClass('has');
+            }
+
+        }
+
+        //地面
+        if(data_home.user_land){
+            var arrland = data_home.user_land;
+            for(var i = 0;i < $('.dimian li').length; i++) {
+                if(arrland.length>0){
+                    if(arrland[i]){
+                        var numland = arrland[i].landId-1;
+                        var jishunum;
+                        if (numland<10){
+                            jishunum = homedata.ord_fee;
+                        }else {
+                            jishunum = homedata.gold_fee;
+                        }
+                        var sunfruit = arrland[i].fruitNum - jishunum;
+                        if(i == numland){
+                            if(sunfruit==0){
+                                $('body').find('.dimian li').eq(numland).find('a').html('<b></b>');
+                            }else {
+                                $('body').find('.dimian li').eq(numland).find('a').html("<b class='shu'></b>");
+                            }
+                        }
+                    }else {
+                        $('body').find('.dimian li').eq(i).find('a').html('');
+                    }
+
+                }
+
+
+
+            }
+        }
+
+
+    }
+
+
+
+    //一下是效果展示
+    $('body').on('click','.foothmbg li',function(){
+        if($(this).hasClass('cur')){
+            $(this).removeClass('cur');
+        }else {
+            $(this).addClass('cur').siblings('li').removeClass('cur');
+        }
+
+        var indkk = $(this).data('zt');
+        switch (indkk)
+        {
+            /*采蜜*/
+            case 4:
+                caimi();
+                break;
+
+            /*刷新*/
+            case 5:
+                shuaxin();
+                break;
+        }
+    });
+
+
+    //点击土地执行相应操作
+    $('body').on('click','.dimian li',function(){
+        var thisdi = $(this);
+        var xuanz;
+        $('.foothmbg li').each(function(){
+            if($(this).hasClass('cur')) {
+                xuanz = $(this).data('zt');
+            }
+        });
+
+
+
+        //点击土地显示果实数量
+        if($('.foothmbg li.cur').length==0){
+            if (thisdi.find('b').length>0){
+                var nodedom = thisdi;
+                var landid = nodedom.index()+1;
+                var arrdatab = arrdata_ch(homedata.user_land,landid);
+                if(arrdatab.fruitNum){
+                    var hasfruit = arrdatab.fruitNum; //已有果实数量
+                    layer.open({
+                        content: '果实数量：'+hasfruit,
+                        skin: 'msg',
+                        time: 2
+                    });
+                }
+
+            }
+        }
+
+
+        switch (xuanz)
+        {
+            /*开垦*/
+            case 0:
+                kaiken(thisdi);
+                break;
+
+            /*播种*/
+            case 1:
+                bozhong(thisdi);
+                break;
+
+
+            /*施肥*/
+            case 2:
+                shifei(thisdi);
+                break;
+
+            /*收割*/
+            case 3:
+                shouge(thisdi);
+                break;
+
+            /*采蜜*/
+            case 4:
+                //caimi(thisdi);
+                break;
+
+            /*刷新*/
+            case 5:
+                //shuaxin(thisdi);
+                break;
+
+        }
+
+
+
+
+
+    });
+
+
+    /*开垦*/
+
+    function kaiken(node){
+
+        var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken));
+        var urllink = 'http://nongchang.65g.cn/index.php/Api/Garden/open';
+        if(node.find('a b').length>0){
+            layer.open({
+                content: '这里已经开垦过了',
+                skin: 'msg',
+                time: 2
+            });
+        }else {
+            var indxu = node.index();
+
+            if(indxu<=4) {
+                if(parseFloat(homedata.houseFruit) >= parseFloat(homedata.ord_fee)){
+                    kaiken_layer =layer.open({
+                        type: 2,
+                        content: '开垦中'
+                    });
+                    node.find('a').append('<b></b>');
+                    kaiken_a(token,qianming,userAccessToken,urllink);//开垦
+
+                    landnum++;
+                }else {
+                    layer.open({
+                        content: '您的果实不够',
+                        skin: 'msg',
+                        time: 2
+                    });
+                }
+            }else if(indxu>4 && indxu<10){
+                if(landnum>=5){
+                    if(parseFloat(homedata.houseFruit) >= parseFloat(homedata.ord_fee)){
+                        kaiken_layer =layer.open({
+                            type: 2,
+                            content: '开垦中'
+                        });
+                        node.find('a').append('<b></b>');
+                        kaiken_a(token,qianming,userAccessToken,urllink);//开垦
+
+                        landnum++;
+                    }else {
+                        layer.open({
+                            content: '您的果实不够',
+                            skin: 'msg',
+                            time: 2
+                        });
+                    }
+                }else {
+                    layer.open({
+                        content: '请先种满上一列地',
+                        skin: 'msg',
+                        time: 2
+                    });
+                }
+
+
+            }else {
+
+                if(landnum>=10){
+                    if(parseFloat(homedata.houseFruit) >= parseFloat(homedata.gold_fee)){
+                        kaiken_layer =layer.open({
+                            type: 2,
+                            content: '开垦中'
+                        });
+                        node.find('a').append('<b></b>');
+                        kaiken_a(token,qianming,userAccessToken,urllink);  //开垦
+
+                        landnum++;
+                    }else {
+                        layer.open({
+                            content: '您的果实不够',
+                            skin: 'msg',
+                            time: 2
+                        });
+                    }
+                }else {
+                    layer.open({
+                        content: '请先种满上一列地',
+                        skin: 'msg',
+                        time: 2
+                    });
+                }
+            }
+
+        }
+
+    }
+
+    /*播种*/
+    var nodedom1;
+    var landid1;
+    var maxapple1;//添加苹果最大值
+    function bozhong(node){
+        $('.bozhong').find('input').val('');
+        nodedom1 = node;
+        landid1 = node.index()+1;
+
+        if(nodedom1.find('a b').length==0){
+            layer.open({
+                content: '请选择有果树的土地播种',
+                skin: 'msg',
+                time: 2
+            });
+        }else {
+            $('.bozhong').show();
+            var arrdatab = arrdata_ch(homedata.user_land,landid1);
+            var hasfruit = arrdatab.fruitNum; //已有果实数量
+            //最多还能加多少果子
+            var maxfruit;
+            if(landid1<11) {
+                maxfruit = (homedata.ord_fee * homedata.full_fee)-hasfruit;
+            }else {
+                maxfruit = (homedata.gold_fee * homedata.full_fee)-hasfruit;
+            }
+
+            //比较总量 能加苹果最大值
+            if(parseFloat(maxfruit) > parseFloat(homedata.houseFruit)){
+                maxapple1=homedata.houseFruit;
+            }else {
+                maxapple1=maxfruit;
+            }
+
+            $('.bozhong').find('input').attr('placeholder','最多'+maxapple1);
+
+
+        }
+
+
+    }
+        //播种
+        $('.bozhong').find('.alertsurebtn').click(function(){
+            $('.bozhong').hide();
+            $('.foothmbg').show();
+            //判断
+            var inputval = $('.bozhong').find('input').val();
+            if(inputval==''){
+                inputval=0;
+                $('.bozhong').hide();
+                return;
+            }
+            if(parseFloat(inputval) <= parseFloat(maxapple1)){
+                $('.bozhong').hide();
+                if (inputval!=0){
+                    nodedom1.find('a b').addClass('shu');
+                }
+                var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken),('land_id='+landid1),('fruit_num='+inputval));
+                api.ajax({
+                    url: 'http://nongchang.65g.cn/index.php/Api/Garden/sow',
+                    method: 'POST',
+                    dataType:'json',
+                    data: {
+                        values: {
+                            token: token,
+                            signature: qianming,
+                            userAccessToken: userAccessToken,
+                            land_id: landid1,
+                            fruit_num: inputval
+                        }
+
+                    }
+                }, function(ret, err) {
+                    if (ret) {
+                        intedate();//初始化数据；
+
+                        layer.open({
+                            content: ret.msg,
+                            skin: 'msg',
+                            time: 2
+                        });
+
+                    } else {
+                        alert(err.msg);
+                    }
+                });
+
+            }else {
+                layer.open({
+                    content: '输入果实超出允许最大值',
+                    skin: 'msg',
+                    time: 2
+                });
+            }
+
+
+        });
+
+    /*施肥*/
+    function shifei(node){
+        var userland_num = homedata.user_land;
+
+        if(homedata.totalFertilizer>0){
+            if(homedata.totalNum==0){
+                layer.open({
+                    content: '请先开垦一块土地',
+                    skin: 'msg',
+                    time: 2
+                });
+                return;
+            }
+
+            $('.shifeibx').show();
+            $('.shifeibx').addClass('show');
+
+            setTimeout(function(){
+                $('.shifeibx').hide();
+            },1900);
+            $('.foothmbg li').removeClass('cur');
+            var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken));
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Garden/fertilize',
+                method: 'get',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    intedate();//初始化数据；
+                    layer.open({
+                        content: ret.msg,
+                        skin: 'msg',
+                        time: 2
+                    });
+                } else {
+
+                    alert(err);
+
+                }
+            });
+
+        }else {
+            layer.open({
+                content: '暂无肥料',
+                skin: 'msg',
+                time: 2
+            });
+        }
+
+
+
+    }
+    /*收割*/
+
+    var landid;
+    var maxapple_l;//收割苹果最大值
+    var nodedom;
+    function shouge(node){
+        $('.shouge').find('input').val('');
+        nodedom = node;
+        landid = node.index()+1;
+
+        if(nodedom.find('a b').length==0){
+            layer.open({
+                content: '请选择有果树的土地收割',
+                skin: 'msg',
+                time: 2
+            });
+        }else {
+            $('.shouge').show();
+            var arrdatab = arrdata_ch(homedata.user_land,landid);
+            var hasfruit = parseFloat(arrdatab.fruitNum); //已有果实数量
+            var jishu;
+            if(landid<11){
+                jishu = parseFloat(homedata.ord_fee);
+            }else {
+                jishu = parseFloat(homedata.gold_fee);
+            }
+            maxapple_l = (hasfruit - jishu).toFixed(2);
+
+            $('.shouge').find('input').attr('placeholder','最多'+maxapple_l);
+
+
+
+        }
+
+
+
+    }
+
+
+        $('.shouge').find('.alertsurebtn').click(function(){
+            $('.shouge').hide();
+            $('.foothmbg').show();
+            var inputval = $('.shouge').find('input').val();
+            inputval = parseFloat(inputval).toFixed(2);
+
+            if (inputval==''){
+                inputval = 0;
+                $('.shouge').hide();
+                return;
+            }
+            //判断
+            if(parseFloat(inputval) <= parseFloat(maxapple_l)){
+                $('.shouge').hide();
+
+                if(inputval==maxapple_l){
+                    nodedom.find('a b').removeClass('shu');
+                }
+                var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken),('land_id='+landid),('fruit_num='+inputval));
+                //提交接口
+                api.ajax({
+                    url: 'http://nongchang.65g.cn/index.php/Api/Garden/harvest',
+                    method: 'POST',
+                    dataType:'json',
+                    data: {
+                        values: {
+                            token: token,
+                            signature: qianming,
+                            userAccessToken: userAccessToken,
+                            land_id: landid,
+                            fruit_num: inputval
+                        }
+
+                    }
+                }, function(ret, err) {
+                    if (ret) {
+                        intedate();//初始化数据；
+                        layer.open({
+                            content: ret.msg,
+                            skin: 'msg',
+                            time: 2
+                        });
+                    } else {
+                        alert(err);
+                    }
+                });
+
+            }else {
+                layer.open({
+                    content: '没有更多果实',
+                    skin: 'msg',
+                    time: 2
+                });
+            }
+
+        });
+    /*采蜜*/
+    function caimi(){
+        api.openWin({
+            name: 'friend',
+            url: 'friend_head.html',
+            opaque: false,
+            vScrollBarEnabled: true
+        });
+        $('.foothmbg li').removeClass('cur');
+    }
+    /*刷新*/
+    function shuaxin(){
+        loading = layer.open({type: 2});
+        intedate();//初始化数据；
+        indland(homedata);
+        $('.bozhong').hide();
+        $('.shouge').hide();
+        $('.foothmbg li').removeClass('cur');
+
+    }
+
+
+
+        //开垦果园接口请求
+        function kaiken_a(token,qianming,userAccessToken,urllink){
+
+            api.ajax({
+                url: urllink,
+                method: 'get',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    intedate();//初始化数据；
+                    //indland(homedata);
+                    if(ret.status!=1){
+                        layer.open({
+                            content:ret.msg,
+                            skin: 'msg',
+                            time: 2
+                        });
+                    }
+
+                } else {
+                    alert(err.msg);
+                }
+            });
+
+        }
+
+
+
+
+        $('.alert_bozheng input').focus(function(){
+            $('.foothmbg').hide();
+        });
+
+
+        $('.alert_bozheng input').blur(function(){
+            $('.foothmbg').show();
+        });
+
+
+        var winheight = $(window).height();
+        //监听窗口大小变化 设置底部出现与消失
+        window.onresize = function(){
+            if(winheight == $(window).height()){
+                $('.foothmbg').show();
+            }else {
+                $('.foothmbg').hide();
+            }
+        }
+
+};
+
+</script>
+
+
+</html>

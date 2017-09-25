@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>交易记录</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+</head>
+<body>
+<div id="wrap">
+    <header>
+        <div class="titlebox">
+            <a class="aui-pull-left aui-btn back" onclick="api.closeWin()">
+                <span class="centerboth"><img src="../../image/back.png" alt=""></span>
+            </a>
+            <div class="aui-title">交易记录</div>
+            <a href="javascript:void(0)" onclick="homebopen()" class="aui-pull-right aui-btn newsbtn"><img src="../../image/homeico.png" alt=""></a>
+        </div>
+
+        <div class="guoshou">
+            <ul class="clearfix">
+                <li tapmode="hover" class="cur" onclick="randomSwitchBtn( this );"><a href="#">出售记录</a> </li>
+                <li tapmode="hover" onclick="randomSwitchBtn( this );"><a href="#">委托出售记录</a> </li>
+                <li tapmode="hover" onclick="randomSwitchBtn( this );"><a href="#">购买记录</a> </li>
+            </ul>
+        </div>
+
+
+    </header>
+    <div id="main">
+
+    </div>
+
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+
+<script type="text/javascript">
+
+    apiready = function () {
+        funIniGroup();
+    };
+
+    function funIniGroup(){
+        var eHeaderLis = $api.domAll('.guoshou li'),
+                frames = [];
+        for (var i = 0,len = eHeaderLis.length; i < len; i++) {
+            frames.push( {
+                name: 'jiaojilu'+i,
+                url: 'jiaojilu_'+i+'.html',
+                bgColor : 'rgba(0,0,0,.2)',
+                bounces:true
+            } )
+        }
+        api.openFrameGroup({
+            name: 'group',
+            scrollEnabled: false,
+            rect: {
+                x: 0,
+                y: $api.dom('header').offsetHeight,
+                w: api.winWidth,
+                h: $api.dom('#main').offsetHeight
+            },
+            index: 0,
+            frames: frames
+        }, function (ret, err) {
+
+        });
+    }
+
+    // 随意切换按钮
+    function randomSwitchBtn( tag ) {
+        if( tag == $api.dom('.guoshou li.cur') )return;
+        var eFootLis = $api.domAll('.guoshou li'),
+
+                index = 0;
+        for (var i = 0,len = eFootLis.length; i < len; i++) {
+            if( tag == eFootLis[i] ){
+                index = i;
+            }else{
+                $api.removeCls(eFootLis[i], 'cur');
+
+            }
+        }
+        $api.addCls( eFootLis[index], 'cur');
+
+        api.setFrameGroupIndex({
+            name: 'group',
+            index: index
+        });
+
+        /*var titzhi = $('.guoshou li').eq(index).find('a').html();
+
+        $('.aui-title').html(titzhi);*/
+
+
+    }
+
+    function homebopen(){
+        api.openWin({
+            name: 'home',
+            url: '../../index.html',
+            opaque: false,
+            vScrollBarEnabled: true
+        });
+    }
+
+
+
+
+</script>
+
+
+</html>

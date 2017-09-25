@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>公告</title>
+    <link rel="stylesheet" type="text/css" href="../../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../script/doT.js"></script>
+    <script type="text/javascript" src="../../layer/layer.js"></script>
+    <style>
+        html,body {
+            height: auto;
+        }
+    </style>
+</head>
+<body class="bgcolor" style="padding-bottom: 10px;">
+<div class="mynav">
+    <ul class="clearfix">
+
+        <script id="gongaotmpl" type="text/x-dot-template">
+            {{~it:value:index}}
+            <li data-gid={{=value.id}}><a href="javascript:void(0)" tapmode class="clearfix arrright"><span class="riqi">{{=value.time}}</span>{{=value.title}}</a></li>
+            {{~}}
+
+
+
+        </script>
+    </ul>
+</div>
+
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+<script type="text/javascript">
+    var gonggaoData;//好友列表数据
+    // 通过dot.template调用你所写的dot.JS。
+    var tmpl = doT.template($("#gongaotmpl")[0].text);
+    if($api.getStorage('gonggaoData')) {
+        gonggaoData = $api.getStorage('gonggaoData');
+        // 将数据扔进templ中。并在DIV中显示出来
+        $("body ul").html(tmpl(gonggaoData));
+    }else {
+        gonggaoData = {}
+    }
+
+
+
+    var token = tokenmake();
+
+
+    apiready = function () {
+        //激活tapmode属性
+        api.parseTapmode();
+
+       // var userAccessToken = $api.getStorage('userAccessToken');
+        var qianming = signaturetik(('token='+token));
+
+        var loading = layer.open({type: 2});
+
+
+        function gongaoli(){
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Sys/notice',
+                method: 'get',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming
+
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+
+                    layer.close(loading);
+                    $api.setStorage('gonggaoData',ret.data);
+                    gonggaoData = ret.data;
+
+                    // 将数据扔进templ中。并在DIV中显示出来
+                    $("body ul").html(tmpl(gonggaoData));
+
+                } else {
+                    alert(err.msg);
+                }
+                api.refreshHeaderLoadDone();
+            });
+        }
+        gongaoli();
+
+
+
+
+        //下拉刷新
+        api.setRefreshHeaderInfo({
+            visible: true,
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#464646',
+            textColor: '#fff',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: true
+        }, function(ret, err){
+            // 这里写重新渲染页面的方法
+            gongaoli();//初始化朋友列表
+
+        });
+
+
+        $('body').on('click','.mynav li',function(){
+            var gid = $(this).data('gid');
+
+
+            api.openWin({
+                name: 'gonggaoxq',
+                url: 'gonggaoxq_head.html',
+                opaque: false,
+                vScrollBarEnabled: true,
+                pageParam:{
+                    'gid':gid
+                }
+            });
+        });
+
+
+
+    };
+
+
+
+
+</script>
+</html>

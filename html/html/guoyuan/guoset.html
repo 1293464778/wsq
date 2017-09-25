@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>果园设置</title>
+    <link rel="stylesheet" type="text/css" href="../../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+
+</head>
+<body class="bgcolor">
+<div class="passwordbx">
+    <p class="chustext"></p>
+    <ul>
+        <li>
+            <span>衰老值：</span>
+            <p class="shualao"><input type="text" value="0%" readonly></p>
+        </li>
+    </ul>
+</div>
+
+
+<div class="surebtn"><a href="#"><img src="../../image/chonzhi.png" alt=""></a> </div>
+
+</body>
+<script type="text/javascript" src="../../layer/layer.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+<script>
+    var token = tokenmake();
+    apiready = function () {
+        //激活tapmode属性
+        api.parseTapmode();
+
+        //提示信息获取
+        var datainfor = $api.getStorage('infor4');
+        $('.chustext').html(datainfor);
+
+
+        var userAccessToken = $api.getStorage('userAccessToken');
+        var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken));
+        var loading = layer.open({type: 2});
+        function shuai_show(){
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Center/getOld',
+                method: 'get',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    layer.close(loading);
+                    if (ret.status){
+                        var shualao = ret.data;
+                        $('.shualao input').val(shualao*100+'%');
+                    }else {
+                        layer.open({
+                            content: ret.msg,
+                            skin: 'msg',
+                            time: 2
+                        });
+                    }
+
+
+                } else {
+                    alert(err.msg);
+                }
+            });
+        }
+        shuai_show();
+
+
+        $('.surebtn').click(function(){
+            layer.open({
+                content: '您确定要重置果园吗？',
+                btn: ['确定', '取消'],
+                yes: function(index){
+                    var loading = layer.open({type: 2});
+                    api.ajax({
+                        url: 'http://nongchang.65g.cn/index.php/Api/Center/resetGarden',
+                        method: 'get',
+                        dataType:'json',
+                        data: {
+                            values: {
+                                token: token,
+                                signature: qianming,
+                                userAccessToken: userAccessToken
+                            }
+
+                        }
+                    }, function(ret, err) {
+                        if (ret) {
+                            shuai_show();
+                            layer.close(loading);
+                            layer.open({
+                                content: ret.msg,
+                                skin: 'msg',
+                                time: 2
+                            });
+
+
+                        } else {
+                            alert(err.msg);
+                        }
+                    });
+
+                }
+            });
+
+
+
+
+        });
+
+
+    };
+</script>
+</html>

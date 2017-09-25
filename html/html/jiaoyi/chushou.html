@@ -1,0 +1,314 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>出售果实</title>
+    <link rel="stylesheet" type="text/css" href="../../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../layer/layer.js"></script>
+</head>
+<body class="bgcolor">
+<div class="guoshou">
+    <ul class="clearfix">
+        <li class="cur"><a href="javascript:void(0)">委托出售</a> </li>
+        <li><a href="javascript:void(0)">定向出售</a> </li>
+    </ul>
+</div>
+
+<div class="guosbox">
+    <div class="guosbbx">
+        <ul>
+            <li>
+                <span>仓库果实</span>
+                <p class="cang_apple">0</p>
+            </li>
+            <li>
+                <span>可售果实</span>
+                <p class="keshou">0</p>
+            </li>
+
+            <li>
+                <span>出售数量</span>
+                <p class="wei_input"><input type="number" placeholder="100整数倍（最大10000）"></p>
+            </li>
+        </ul>
+        <p class="chustext weichutext"></p>
+        <div class="surebtn btnwei"><a href="javascript:void(0)"><img src="../../image/surebtn.png" alt=""></a> </div>
+    </div>
+
+
+    <div class="guosbbx" style="display: none">
+        <ul>
+            <li>
+                <span>仓库果实</span>
+                <p class="cang_apple">0</p>
+            </li>
+            <li>
+                <span>可售果实</span>
+                <p class="keshou">0</p>
+            </li>
+
+            <li>
+                <span>出售数量</span>
+                <p class="din_input"><input type="number" placeholder="10的数倍"></p>
+            </li>
+            <li>
+                <span>目标会员号</span>
+                <p class="huinum"><input type="text" placeholder="请输入目标会员号"></p>
+            </li>
+            <li>
+                <span>目标姓名</span>
+                <p class="huiname"><input type="text" placeholder="请输入目标姓名"></p>
+            </li>
+        </ul>
+
+        <p class="chustext dingtext"></p>
+
+        <div class="surebtn btnding"><a href="javascript:void(0)"><img src="../../image/surebtn.png" alt=""></a> </div>
+    </div>
+</div>
+
+
+
+
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+<script type="text/javascript">
+    var token = tokenmake();
+    var userAccessToken;
+    var qianming;
+    var canapple={};
+    if(canapple.num){
+        $('.cang_apple').html(canapple.num);
+    }
+    if(canapple.sale_num){
+        $('.keshou').html(canapple.sale_num);
+    }
+
+
+
+    apiready = function () {
+        //激活tapmode属性
+        api.parseTapmode();
+
+        //提示信息获取
+        var datainfor = $api.getStorage('infor5');
+        $('.dingtext').html(datainfor);
+        var datainfor8 = $api.getStorage('infor8');
+        $('.weichutext').html(datainfor8);
+
+        userAccessToken = $api.getStorage('userAccessToken');
+
+
+        //获取仓库果实
+        function getapple(){
+            qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken));
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Order/getNum',
+                method: 'post',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    var retdata= ret.data;
+                    $('.cang_apple').html(retdata.num);
+                    $('.keshou').html(retdata.sale_num);
+                    $api.setStorage('canapple',retdata);
+                    canapple = retdata;
+
+
+                } else {
+                    //alert('初始化失败！');
+                }
+            });
+        }
+        getapple();
+
+
+
+
+
+    //委托出售
+        $('.btnwei').click(function(){
+            var wei_input = $('.wei_input').find('input').val();
+            if(wei_input % 100 !=0){
+                layer.open({
+                    content: '请输入100整数倍',
+                    skin: 'msg',
+                    time: 2
+                });
+                return;
+            }
+            if(wei_input>10000) {
+                layer.open({
+                    content: '最大为10000',
+                    skin: 'msg',
+                    time: 2
+                });
+                return;
+            }
+
+            if(wei_input>canapple.sale_num) {
+                layer.open({
+                    content: '超出最大值',
+                    skin: 'msg',
+                    time: 2
+                });
+                return;
+            }
+            if(wei_input=='') {
+                layer.open({
+                    content: '没有填写数值',
+                    skin: 'msg',
+                    time: 2
+                });
+                return;
+            }
+            qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken),('sale_num='+wei_input));
+            //委托出售
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Order/commission',
+                method: 'post',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken,
+                        sale_num:wei_input
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+
+                    layer.open({
+                        content: ret.msg,
+                        skin: 'msg',
+                        time: 2
+                    });
+                    $('.wei_input').find('input').val('');
+                    getapple();
+
+                } else {
+                    //alert('初始化失败！');
+                }
+            });
+        });
+
+
+    //定向出售
+        $('.btnding').click(function(){
+            var din_input = $('.din_input').find('input').val();
+            var huinum = $('.huinum').find('input').val();
+            var huiname = $('.huiname').find('input').val();
+            if(din_input % 10 !=0){
+                layer.open({
+                    content: '请输入10整数倍',
+                    skin: 'msg',
+                    time: 2
+                });
+                return;
+            }
+
+            if(din_input >canapple.sale_num){
+                layer.open({
+                    content: '超出最大值',
+                    skin: 'msg',
+                    time: 2
+                });
+                return;
+            }
+            if(din_input ==''){
+                layer.open({
+                    content: '请输入出售果实数',
+                    skin: 'msg',
+                    time: 2
+                });
+                return;
+            }
+
+            if(huinum ==''){
+                layer.open({
+                    content: '请输入目标会员号',
+                    skin: 'msg',
+                    time: 2
+                });
+                return;
+            }
+            if(huiname ==''){
+                layer.open({
+                    content: '请输入目标姓名',
+                    skin: 'msg',
+                    time: 2
+                });
+                return;
+            }
+
+
+            qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken),('sale_num='+din_input),('userName='+huinum),('realName='+huiname));
+            //定向出售
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Order/direction',
+                method: 'post',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken,
+                        sale_num:din_input,
+                        userName:huinum,
+                        realName:huiname
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    layer.open({
+                        content: ret.msg,
+                        skin: 'msg',
+                        time: 2
+                    });
+                    getapple();
+
+                    $('.din_input').find('input').val('');
+                    $('.huinum').find('input').val('');
+                    $('.huiname').find('input').val('');
+
+                } else {
+                    //alert('初始化失败！');
+                }
+            });
+        });
+
+
+    };
+
+
+
+    //tab标签页切换
+    $('.guoshou li').click(function(){
+        $(this).addClass('cur').siblings('li').removeClass('cur');
+        var ind = $(this).index();
+        $('.guosbox').find('.guosbbx').eq(ind).show().siblings('.guosbbx').hide();
+
+    })
+
+
+</script>
+</html>

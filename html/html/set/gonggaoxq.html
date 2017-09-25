@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>公告</title>
+    <link rel="stylesheet" type="text/css" href="../../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../script/doT.js"></script>
+    <script type="text/javascript" src="../../layer/layer.js"></script>
+
+</head>
+<body class="bgcolor">
+<div class="gonggaoxq">
+    <script id="gongaotmpl" type="text/x-dot-template">
+        <div class="gongbx">
+            <h2 class="namegood">{{=it.title}}</h2>
+            <p class="dateright">{{=it.publishTime}}</p>
+        </div>
+
+        <div class="gongaoxq">
+            {{=it.content}}
+        </div>
+    </script>
+
+</div>
+
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var gid = api.pageParam.gid;  //要跳转的ID
+        var gonggaoData = $api.getStorage('gonggaoData');
+
+        var datagongao;
+        for (var i=0;i<gonggaoData.length;i++){
+
+            if(gonggaoData[i].id == gid) {
+                datagongao = gonggaoData[i];
+            }
+        }
+
+
+        // 通过dot.template调用你所写的dot.JS。
+        var tmpl = doT.template($("#gongaotmpl")[0].text);
+        // 将数据扔进templ中。并在DIV中显示出来
+        $("body .gonggaoxq").html(tmpl(datagongao));
+
+
+
+
+
+
+    };
+
+
+
+</script>
+</html>

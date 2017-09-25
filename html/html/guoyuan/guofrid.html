@@ -1,0 +1,292 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>果园</title>
+    <link rel="stylesheet" type="text/css" href="../../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../script/doT.js"></script>
+    <script type="text/javascript" src="../../layer/layer.js"></script>
+
+    <style>
+        html,body {
+            overflow-y: hidden;
+        }
+    </style>
+</head>
+<body class="bgcolor fdbbv">
+<script id="intertmpl" type="text/x-dot-template">
+    <div class="guohomebx">
+
+        <!--身份-->
+        <div class="shengf centerboth">
+            <img src="../../image/shengfen_pn.png" alt="">
+            <span>贫农</span>
+        </div>
+        <!--地面-->
+        <div class="dimian">
+            <ul>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+                <li><a href="javascript:void(0)"></a> </li>
+            </ul>
+        </div>
+        <!--稻草人-->
+        <div class="daocaobx">
+            <ul>
+                <li><a class="" href="javascript:void(0)"></a></li>
+                <li><a class="" href="javascript:void(0)"></a></li>
+                <li><a class="" href="javascript:void(0)"></a></li>
+                <li><a class="" href="javascript:void(0)"></a></li>
+            </ul>
+        </div>
+        <!--狗-->
+        <div class="dogbox">
+            <div class="dogbg"><img src="../../image/dog1.png" alt=""></div>
+            <div class="dogbg"><img src="../../image/dog2.png" alt=""></div>
+        </div>
+        <!--人-->
+        <div class="manbgbox"></div>
+
+        <!--底部按钮-->
+        <div class="foothmbg">
+            <ul class="centerboth friddibu">
+                <li><a href="javascript:void(0)"><img src="../../image/homeb3.png" alt=""><b>化肥：{{=it.totalFertilizer}}</b></a></li>
+                <li class="caimibtn"><a href="javascript:void(0)"><img src="../../image/homeb5.png" alt=""><b>采蜜</b></a></li>
+            </ul>
+        </div>
+
+        <!--采蜜数字展示-->
+        <p class="cainumber" style="display: none">+{{=it.picknum}}</p>
+
+
+    </div>
+</script>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+
+<script>
+    var homedata_fid;//首页数据
+    // 通过dot.template调用你所写的dot.JS。
+    var tmpl = doT.template($("#intertmpl")[0].text);
+    if($api.getStorage('homejson_fid')) {
+        homedata_fid = $api.getStorage('homejson_fid');
+        // 将数据扔进templ中。并在DIV中显示出来
+        $("body").html(tmpl(homedata_fid));
+    }else {
+        homedata_fid={};
+    }
+
+
+
+
+    //化肥数量
+    if (!homedata_fid.totalFertilizer){
+        homedata_fid.totalFertilizer = 0.00;
+    }
+
+    var token = tokenmake();
+    apiready = function () {
+
+        var frdUserId = api.pageParam.userId;  //好友id
+        var ispick = api.pageParam.ispick;  //好友是否采蜜状态
+
+        //激活tapmode属性
+        api.parseTapmode();
+
+        var userAccessToken = $api.getStorage('userAccessToken');
+        var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken),('friend_id='+frdUserId));
+        var loading = layer.open({type: 2});
+        //数据绑定
+
+        function intedate(){
+
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Garden/friendGarden',
+                method: 'post',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken,
+                        friend_id: frdUserId
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    layer.close(loading);
+                    $api.setStorage('homejson_fid',ret.data);
+                    homedata_fid = ret.data;
+
+                    // 将数据扔进templ中。并在DIV中显示出来
+                    $("body").html(tmpl(homedata_fid));
+
+                    levelshow();//等级数据展示
+                    indland();
+
+                } else {
+                    //alert('初始化失败！');
+                }
+            });
+        }
+
+        intedate();
+
+        //等级展示
+        function levelshow(){
+            var leveldata = ['贫农','中农','中上农','富农','农场主','庄园主','地产主'];
+
+            $api.setStorage('leveldata',leveldata);
+
+            var levelnum = homedata_fid.level;
+            var htmllevel = leveldata[levelnum-1];
+            $('.shengf').find('span').html(htmllevel);
+        }
+        //等级展示结束
+
+        //地面初始化数据
+        function indland(){
+            //狗
+            if(homedata_fid.dog) {
+                var dogdata = homedata_fid.dog;
+                if(dogdata==0) {
+                    $('.dogbox').find('.dogbg').removeClass('add');
+                }else if(dogdata==1) {
+                    $('.dogbox').find('.dogbg').removeClass('add');
+                    $('.dogbox').find('.dogbg').eq(0).addClass('add');
+                }else {
+                    $('.dogbox').find('.dogbg').addClass('add');
+                }
+
+            }
+            //稻草人
+            if(homedata_fid.scarecrow){
+                var daocaodata = homedata_fid.scarecrow;
+                for(var j =0;j<daocaodata;j++){
+                    $('.daocaobx').find('li').eq(j).find('a').addClass('has');
+                }
+
+            }
+
+            //地面
+            if(homedata_fid.user_land){
+                var arrland = homedata_fid.user_land;
+
+                for(var i = 0;i < arrland.length; i++) {
+                    var numland = arrland[i].landId-1;
+                    var jishunum;
+                    if (numland<10){
+                        jishunum = homedata_fid.ord_fee;
+                    }else {
+                        jishunum = homedata_fid.gold_fee;
+                    }
+                    var sunfruit = arrland[i].fruitNum - jishunum;
+                    if(sunfruit==0){
+                        $('body').find('.dimian li').eq(numland).find('a').html('<b></b>');
+                    }else {
+                        $('body').find('.dimian li').eq(numland).find('a').html("<b class='shu'></b>");
+                    }
+
+                }
+            }
+
+
+        }
+        indland();
+
+
+        //采蜜
+        $('body').on('click','.caimibtn',function(){
+            if(ispick==0){
+                $('.cainumber').show();
+                $('.cainumber').addClass('cur');
+                setTimeout(function(){
+                    $('.cainumber').hide();
+                    $('.cainumber').removeClass('cur');
+                },800);
+
+                //采蜜
+                api.ajax({
+                    url: 'http://nongchang.65g.cn/index.php/Api/Garden/pick',
+                    method: 'post',
+                    dataType:'json',
+                    data: {
+                        values: {
+                            token: token,
+                            signature: qianming,
+                            userAccessToken: userAccessToken,
+                            friend_id: frdUserId
+                        }
+
+                    }
+                }, function(ret, err) {
+                    if (ret) {
+                        ispick=1;//更改状态
+
+                        layer.open({
+                            content: ret.msg,
+                            skin: 'msg',
+                            time: 2
+                        });
+
+
+                    } else {
+                        alert('采蜜失败！');
+                    }
+                });
+
+
+            }else {
+                if(homedata_fid.picknum==0){
+                    layer.open({
+                        content: '没有蜂蜜可采！',
+                        skin: 'msg',
+                        time: 2
+                    });
+                }else {
+                    layer.open({
+                        content: '已采过，明天再来看看吧！',
+                        skin: 'msg',
+                        time: 2
+                    });
+                }
+
+
+            }
+
+        });
+
+
+
+
+
+
+    };
+
+</script>
+
+
+</html>

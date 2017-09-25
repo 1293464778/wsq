@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="../../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../script/doT.js"></script>
+    <script type="text/javascript" src="../../layer/layer.js"></script>
+
+</head>
+<body class="bgcolor">
+<div class="mynav">
+    <ul class="clearfix">
+        <li><a href="javascript:void(0)" tapmode onclick="zldopen()" class="clearfix arrright"><img src="../../image/myico_liao.png" alt=""> 个人资料</a></li>
+        <li><a href="javascript:void(0)" tapmode onclick="passxopen()" class="clearfix arrright"><img src="../../image/myico_mi.png" alt=""> 修改密码</a></li>
+        <li class="tuichu"><a href="javascript:void(0)" class="clearfix arrright"><img src="../../image/myico_tui.png" alt=""> 退出登录</a></li>
+    </ul>
+</div>
+
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+<script type="text/javascript">
+    var token = tokenmake();
+    apiready = function () {
+        //激活tapmode属性
+        api.parseTapmode();
+        infoget(4);//获取重置果园提示
+        infoget(5);//定向出售提示
+        infoget(6);//获取发布站内信提示
+        infoget(8);//委托出售提示
+        var qianming = signaturetik(('token='+token));
+
+
+        $('.tuichu').click(function(){
+
+            layer.open({
+                content: '您确定要退出登录吗？',
+                btn: ['确定', '取消'],
+                yes: function(index){
+                    tuichu(token,qianming,'../login.html');
+                    layer.close(index);
+
+                }
+            });
+
+        });
+
+
+
+
+
+
+    };
+    function zldopen(){
+        api.openWin({
+            name: 'ziliao',
+            url: 'ziliao_head.html',
+            opaque: false,
+            vScrollBarEnabled: true
+        });
+    }
+
+
+    function passxopen(){
+        api.openWin({
+            name: 'password',
+            url: 'password_head.html',
+            opaque: false,
+            vScrollBarEnabled: true
+        });
+    }
+
+
+
+
+
+</script>
+</html>

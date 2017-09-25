@@ -1,0 +1,42 @@
+{
+  "farmData":"http://nongchang.65g.cn/index.php/Api/Garden/index",                        //果园数据展示
+  "kaiken":"http://nongchang.65g.cn/index.php/Api/Garden/open",                           //果园开垦种树接口
+  "zhiguo":"http://nongchang.65g.cn/index.php/Api/Garden/sow",                            //植果接口
+  "huohuafei":"http://nongchang.65g.cn/index.php/Api/Garden/getAddFertilizer",            //点击获取系统派送的化肥
+  "shifei":"http://nongchang.65g.cn/index.php/Api/Garden/fertilize",                      //施肥接口
+  "shouge":"http://nongchang.65g.cn/index.php/Api/Garden/harvest",                        //收割接口
+  "shengzhang":"http://nongchang.65g.cn/index.php/Api/Static/index",                      //生长记录图
+  "friend_mi":"http://nongchang.65g.cn/index.php/Api/Garden/picklist",                    //好友采蜜列表
+  "friend_guo":"http://nongchang.65g.cn/index.php/Api/Garden/friendGarden",               //好友果园展示
+  "friend_cai":"http://nongchang.65g.cn/index.php/Api/Garden/pick",                       //到好友果园采蜜
+  "second_code":"http://nongchang.65g.cn/index.php/Api/Center/checkSecPwd",               //判断二级密码输入是否正确
+  "getOld":"http://nongchang.65g.cn/index.php/Api/Center/getOld",                         //展示衰老值
+  "resetGarden":"http://nongchang.65g.cn/index.php/Api/Center/resetGarden",               //重置果园
+  "pickAll":"http://nongchang.65g.cn/index.php/Api/Garden/pickAll",                       //一键采蜜
+  "getNum":"http://nongchang.65g.cn/index.php/Api/Order/getNum",                          //获取仓库果实数量
+  "commission":"http://nongchang.65g.cn/index.php/Api/Order/commission",                  //委托出售
+  "direction":"http://nongchang.65g.cn/index.php/Api/Order/direction",                    //定向出售
+  "directionList":"http://nongchang.65g.cn/index.php/Api/Order/directionList",            //定向出售记录
+  "commissionList":"http://nongchang.65g.cn/index.php/Api/Order/commissionList",          //委托出售记录
+  "buyList":"http://nongchang.65g.cn/index.php/Api/Order/buyList",                        //购买记录
+  "getSeed":"http://nongchang.65g.cn/index.php/Api/Order/getSeed",                        //获取种子数量
+  "seedTofruit":"http://nongchang.65g.cn/index.php/Api/Order/seedTofruit",                //种子转化成果实
+  "seedList":"http://nongchang.65g.cn/index.php/Api/Order/seedList",                      //种子兑换记录
+  "commitDirection":"http://nongchang.65g.cn/index.php/Api/Order/commitDirection",        //定向出售确认
+  "commitBuy":"http://nongchang.65g.cn/index.php/Api/Order/commitBuy",                    //购买记录确认
+  "login":"http://nongchang.65g.cnhttp://nongchang.65g.cn/index.php/Api/Login/login",     //登录验证
+  "verify":"http://nongchang.65g.cn/index.php/Api/Index/verify",                          //验证码
+  "getInfo":"http://nongchang.65g.cn/index.php/Api/Center/getInfo",                       //获取用户的账号和果园等级 发展好友需要的果实数量
+  "recommen":"http://nongchang.65g.cn/index.php/Api/Center/recommen",                     //推荐好友接口
+  "getUser":"http://nongchang.65g.cn/index.php/Api/Center/getUser",                       //个人信息展示
+  "editUser":"http://nongchang.65g.cn/index.php/Api/Center/editUser",                     //个人信息修改
+  "editPwd":"http://nongchang.65g.cn/index.php/Api/Center/editPwd",                       //修改密码
+  "notice":"http://nongchang.65g.cn/index.php/Api/Sys/notice",                            //公告接口
+  "mail":"http://nongchang.65g.cn/index.php/Api/Index/mail",                              //发布站内信
+  "logout":"http://nongchang.65g.cn/index.php/Api/Login/logout",                          //退出登录
+  "remind":"http://nongchang.65g.cnindex.php/Api/Index/remind"                            //温馨提示接口
+
+
+
+}
+

@@ -1,0 +1,238 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>生长记录</title>
+    <link rel="stylesheet" type="text/css" href="../../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../script/echarts.min.js"></script>
+    <script type="text/javascript" src="../../layer/layer.js"></script>
+</head>
+<body class="bgcolor">
+<div id="main" class="tubiao"></div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+<script>
+    var loading;
+    var data_table;//近七天收益数字
+    if($api.getStorage('data_table')) {
+        data_table = $api.getStorage('data_table');
+    }else {
+        //jchushi();
+        data_table = [0,0,0,0,0,0,0];
+        loading = layer.open({type: 2});
+    }
+    var token = tokenmake();
+    apiready = function () {
+        //激活tapmode属性
+        api.parseTapmode();
+
+        var userAccessToken = $api.getStorage('userAccessToken');
+        var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken));
+
+        function jchushi(){
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Static/index',
+                method: 'get',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    var arrshow =ret.data;
+                    if(arrshow){
+                        var arrtable=[];
+                        for (var i = 0;i<arrshow.length;i++){
+                            if (arrshow[i]==''||arrshow[i]==null){
+                                arrtable.push(0);
+
+                            }else {
+                                arrtable.push(arrshow[i]);
+                            }
+
+
+                        }
+                        layer.close(loading);
+                        $api.setStorage('data_table',arrtable);
+                        data_table = arrtable;
+
+                        myChart.setOption(setdata(dateArray,data_table));//重新调用表格
+                    }
+
+
+                } else {
+                    alert(err.msg);
+                }
+            });
+        }
+        jchushi();
+
+
+    };
+
+
+    //设置日期，当前日期的前七天
+    var myDate = new Date(); //获取今天日期
+    myDate.setDate(myDate.getDate() - 6);
+    var dateArray = [];
+    var dateTemp;
+    var flag = 1;
+    for (var i = 0; i < 7; i++) {
+        dateTemp = (myDate.getMonth()+1)+"-"+myDate.getDate();
+        dateArray.push(dateTemp);
+        myDate.setDate(myDate.getDate() + flag);
+    }
+
+
+    var myChart = echarts.init(document.getElementById('main'));
+
+    function setdata(dateArray,data_table){
+        option = {
+            title: {
+                text: '果园收益趋势图',
+                x: 'center',
+                textStyle: {
+                    fontSize: 18,
+                    fontWeight: 'bolder',
+                    color: '#ffffff'          // 主标题文字颜色
+                },
+                subtext: ''
+            },
+
+            grid: {
+                left: '2%',
+                right: '4%',
+
+                containLabel: true
+            },
+
+
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['','']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+                    dataView: {readOnly: false},
+                    magicType: {type: ['line', 'bar']},
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            xAxis:  {
+                type: 'category',
+                boundaryGap: false,
+
+                axisLine:{
+                    lineStyle:{
+                        color:'#006C71',
+                        width:1
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        // 使用深浅的间隔色
+                        color: '#00878A'
+                    }
+                },
+                textStyle: {
+                    color: '#ffffff',
+                    fontSize:18
+                },
+
+
+                data: dateArray
+            },
+            yAxis: {
+                type: 'value',
+
+                splitLine: {
+                    lineStyle: {
+                        // 使用深浅的间隔色
+                        color: '#00878A'
+                    }
+                },
+                axisLine: {
+
+                    lineStyle: {
+                        color:'#006C71',
+                        width:0
+                    }
+                },
+
+                axisLabel: {
+                    formatter: '{value} '
+                }
+            },
+
+            series: [
+
+                {
+                    name:'收益',
+                    type:'line',
+                    data:data_table,
+                    symbol:'emptyCircle',
+                    symbolSize:'8',
+                    itemStyle : {
+                        normal : {
+                            color:'#10A8AB',
+                            lineStyle:{
+                                width: 2,
+                                color:'#ffffff'
+                            }
+                        }
+                    },
+
+
+                    markLine: {
+                        data: [
+                            {type: 'average', name: '平均值'},
+                            [{
+                                symbol: 'none',
+                                x: '90%',
+                                yAxis: 'max'
+                            }, {
+                                symbol: 'circle',
+                                label: {
+                                    normal: {
+                                        position: 'start',
+                                        formatter: '最大值'
+                                    }
+                                },
+                                type: 'max',
+                                name: '最高点'
+                            }]
+                        ]
+                    }
+                }
+            ]
+        };
+        return option
+    }
+
+
+    myChart.setOption(setdata(dateArray,data_table));
+    //jchushi();
+</script>
+
+
+</html>

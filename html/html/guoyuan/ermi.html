@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>二级密码</title>
+    <link rel="stylesheet" type="text/css" href="../../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../layer/layer.js"></script>
+
+</head>
+<body class="bgcolor">
+<div class="passwordbx">
+    <ul>
+        <li>
+            <p><input type="password" placeholder="请输入二级密码"></p>
+        </li>
+    </ul>
+</div>
+
+
+<div class="surebtn"><a href="javascript:void(0)" tapmode><img src="../../image/surebtn.png" alt=""></a> </div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+<script>
+    apiready = function () {
+        //激活tapmode属性
+        api.parseTapmode();
+
+        $('.surebtn').click(function(){
+            openpagein();
+        });
+
+        api.addEventListener({
+            name:'viewappear'
+        }, function(ret, err){
+            $('.passwordbx').find('input').val('');
+        });
+
+    };
+
+    function openpagein(){
+        var loading = layer.open({type: 2});
+        var inputmi = $('.passwordbx').find('input').val();
+        var token = tokenmake();
+        var userAccessToken = $api.getStorage('userAccessToken');
+        var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken),('secondPwd='+inputmi));
+
+
+
+        api.ajax({
+            url: 'http://nongchang.65g.cn/index.php/Api/Center/checkSecPwd',
+            method: 'POST',
+            dataType:'json',
+            data: {
+                values: {
+                    token: token,
+                    signature: qianming,
+                    userAccessToken: userAccessToken,
+                    secondPwd: inputmi
+                }
+
+            }
+        }, function(ret, err) {
+            layer.close(loading);
+            if (ret) {
+
+                if(ret.status==1){
+
+                    tiazcom();
+                }else {
+                    layer.open({
+                        content: ret.msg,
+                        skin: 'msg',
+                        time: 2
+                    });
+                }
+
+            } else {
+                alert(err.msg);
+            }
+        });
+
+    }
+
+    //跳转界面
+    function tiazcom(){
+        var pagename = api.pageParam.pagename;  //要跳转界面名称
+        api.openWin({
+            name: pagename,
+            url: pagename,
+            opaque: false,
+            vScrollBarEnabled: true
+
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>出售记录</title>
+    <link rel="stylesheet" type="text/css" href="../../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../script/doT.js"></script>
+    <script type="text/javascript" src="../../layer/layer.js"></script>
+</head>
+<body class="bgcolor">
+
+<div class="jilubxx">
+    <ul>
+
+    </ul>
+
+</div>
+
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+<script type="text/javascript">
+
+    var token = tokenmake();
+    var page = 1; //页码开始位置
+    var page_num = 10; //每页显示数量
+    apiready = function () {
+        //激活tapmode属性
+        api.parseTapmode();
+
+        var userAccessToken = $api.getStorage('userAccessToken');
+        var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken),('page='+page),('page_num='+page_num));
+        var loading = layer.open({type: 2});
+
+        //记录列表
+        function jiludate(){
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Order/directionList',
+                method: 'POST',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken,
+                        page: page,
+                        page_num: page_num
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                	if(page==1){
+                	$(".jilubxx ul").html('');
+                	}
+                    if(ret.data){
+                        adddatali(ret.data);
+                    }
+
+                    layer.close(loading);
+                    page++;
+                } else {
+                    alert(err.msg);
+                }
+            });
+        }
+
+        jiludate();
+
+        //添加数据到界面
+        function adddatali(lidata){
+
+            for(var i =0;i<lidata.length;i++){
+                var addhtml;
+                if (lidata[i].status == 1){
+                    addhtml = "<li><p class='clearfix'><span class='namesoan'>"+lidata[i].buyRealname+"</span><span>"+lidata[i].buyUsername+"</span><b>"+lidata[i].createTime+"</b></p><p class='clearfix'><span>出售数量："+lidata[i].saleNum+"</span><a class='qu' data-did='"+lidata[i].id+"' href='javascript:void(0)'>确认</a> </p></li>";
+
+                }else if(lidata[i].status == 2) {
+
+                    addhtml = "<li><p class='clearfix'><span class='namesoan'>"+lidata[i].buyRealname+"</span><span>"+lidata[i].buyUsername+"</span><b>"+lidata[i].createTime+"</b></p><p class='clearfix'><span>出售数量："+lidata[i].saleNum+"</span><a class='an' data-did='"+lidata[i].id+"' href='javascript:void(0)'>已确认</a> </p></li>";
+
+                }else if (lidata[i].status == 0){
+                    addhtml = "<li><p class='clearfix'><span class='namesoan'>"+lidata[i].buyRealname+"</span><span>"+lidata[i].buyUsername+"</span><b>"+lidata[i].createTime+"</b></p><p class='clearfix'><span>出售数量："+lidata[i].saleNum+"</span><a class='dai' data-did='"+lidata[i].id+"' href='javascript:void(0)'>待买家确认</a> </p></li>";
+                }
+				
+                $(".jilubxx ul").append(addhtml);
+
+            }
+            api.refreshHeaderLoadDone();
+        }
+
+
+
+        //加载到底部滚动
+        api.addEventListener({name: 'scrolltobottom'}, function(ret, err){
+
+            jiludate();
+        });
+
+       
+
+        //下拉重新加载
+        //下拉刷新
+        api.setRefreshHeaderInfo({
+            visible: true,
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#464646',
+            textColor: '#fff',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: true
+        }, function(ret, err){
+            page = 1;
+            jiludate();
+
+
+        });
+
+
+
+
+        //定向出售确定
+
+        $(".jilubxx ul").on('click','li a.qu',function(){
+            var thisdom = $(this);
+            var dinid = $(this).data('did');
+            var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken),('order_id='+dinid));
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Order/commitDirection',
+                method: 'POST',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken,
+                        order_id: dinid
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if(ret.status==1){
+                        thisdom.removeClass('qu').addClass('an');
+                        thisdom.html('已确认');
+                    }
+                    layer.open({
+                        content: ret.msg,
+                        skin: 'msg',
+                        time: 2
+                    });
+                } else {
+                    alert(err.msg);
+                }
+            });
+
+
+        });
+
+
+
+
+
+
+
+    };
+
+</script>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>好友果园</title>
+    <link rel="stylesheet" type="text/css" href="../../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../script/doT.js"></script>
+    <script type="text/javascript" src="../../layer/layer.js"></script>
+</head>
+<body class="bgcolor">
+<div class="mynav guonav">
+    <ul class="clearfix">
+    
+    
+        <script id="friendtmpl" type="text/x-dot-template">
+            {{~it:value:index}}
+            {{?value.isPick==0}}
+            <li class="hand"><a href="javascript:void(0)" tapmode class="clearfix arrright" data-fid={{=value.recommendedId}} data-name={{=value.realName}} data-pick={{=value.isPick}}> {{=value.realName}}</a></li>
+            {{??}}
+            <li><a href="javascript:void(0)" tapmode class="clearfix arrright" data-fid={{=value.recommendedId}} data-name={{=value.realName}} data-pick={{=value.isPick}}> {{=value.realName}}</a></li>
+            {{?}}
+            {{~}}
+        </script>
+    </ul>
+</div>
+<div class="yijian"><a href="javascript:void(0)"><img src="../../image/yijian.png" alt=""></a> </div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+<script type="text/javascript">
+
+    var friendData;//好友列表数据
+    // 通过dot.template调用你所写的dot.JS。
+    var tmpl = doT.template($("#friendtmpl")[0].text);
+    if($api.getStorage('friendListjson')) {
+        friendData = $api.getStorage('friendListjson');
+        // 将数据扔进templ中。并在DIV中显示出来
+        $("body ul").html(tmpl(friendData));
+    }else {
+        friendData = {}
+    }
+
+
+
+    var token = tokenmake();
+    var loading = layer.open({type: 2});
+    apiready = function () {
+        //激活tapmode属性
+        api.parseTapmode();
+
+        var userAccessToken = $api.getStorage('userAccessToken');
+        var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken));
+        //初始化朋友列表
+        function inteFirdate(){
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Garden/picklist',
+                method: 'get',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken
+                    }
+
+                }
+            }, function(ret, err) {
+
+                if (ret) {
+                    $api.setStorage('friendListjson',ret.data);
+                    friendData = ret.data;
+
+                    // 将数据扔进templ中。并在DIV中显示出来
+                    $("body ul").html(tmpl(friendData));
+
+                } else {
+                   // alert(err.msg);
+                }
+                layer.close(loading);
+                api.refreshHeaderLoadDone();
+            });
+        }
+
+        inteFirdate();//初始化朋友列表
+
+
+        //下拉刷新
+        api.setRefreshHeaderInfo({
+            visible: true,
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#464646',
+            textColor: '#fff',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: true
+        }, function(ret, err){
+            // 这里写重新渲染页面的方法
+            inteFirdate();//初始化朋友列表
+
+        });
+
+
+        api.addEventListener({
+            name:'viewappear'
+        }, function(ret, err){
+            inteFirdate();
+        });
+
+
+
+        //一键采蜜
+        $('.yijian').click(function(){
+            var caimi =layer.open({
+                type: 2,
+                content: '一键采蜜中'
+            });
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Garden/pickAll',
+                method: 'get',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken
+                    }
+
+                }
+            }, function(ret, err) {
+                layer.close(caimi);
+                if (ret) {
+                    inteFirdate();
+                    layer.open({
+                        content:ret.msg,
+                        skin: 'msg',
+                        time: 2
+                    });
+                } else {
+                    // alert(err.msg);
+                }
+                layer.close(loading);
+                api.refreshHeaderLoadDone();
+            });
+
+
+
+
+
+
+
+        });
+
+
+
+    };
+
+
+    $('body ul').on('click','li',function(){
+        var userId = $(this).find('a').data('fid');  //好友ID
+        var ispick = $(this).find('a').data('pick');  //好友是否采蜜状态
+        var realname = $(this).find('a').data('name');  //好友姓名
+        api.openWin({
+            name: 'guofrid',
+            url: 'guofrid_head.html',
+            opaque: false,
+            vScrollBarEnabled: true,
+            pageParam:{
+                'userId':userId,
+                'realname':realname,
+                'ispick':ispick
+            }
+        });
+    });
+
+
+
+
+
+
+</script>
+</html>

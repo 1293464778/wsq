@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>个人资料</title>
+    <link rel="stylesheet" type="text/css" href="../../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <script type="text/javascript" src="../../script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../script/doT.js"></script>
+    <script type="text/javascript" src="../../layer/layer.js"></script>
+
+</head>
+<body class="bgcolor">
+<div class="passwordbx">
+    <ul>
+        <script id="mytmpl" type="text/x-dot-template">
+            <li class="username">
+                <span>用户名</span>
+                <p><input type="text" placeholder="请输入用户名" value={{=it.userName}}></p>
+            </li>
+            <li class="realname">
+                <span>真实姓名</span>
+                <p><input type="text" placeholder="请输入您的真实姓名" value={{=it.realName}}></p>
+            </li>
+            <li class="telphone">
+                <span>联系电话</span>
+                <p><input type="tel" placeholder="请输入您的联系方式" value={{=it.phone}}></p>
+            </li>
+            <li class="sex">
+                <span>性别</span>
+                <p>
+                    {{?it.sex==1}}
+                    <label><input type="radio" name="sex" value="1" checked><span>男</span></label>
+                    <label><input type="radio" name="sex" value="2"><span>女</span></label>
+                    {{??}}
+                    <label><input type="radio" name="sex" value="1"><span>男</span></label>
+                    <label><input type="radio" name="sex" value="2" checked><span>女</span></label>
+                    {{?}}
+
+                </p>
+            </li>
+            <li class="weix">
+                <span>微信号</span>
+                <p><input type="text" placeholder="请输入微信号" value={{=it.wechat}}></p>
+            </li>
+            <li class="zhifu">
+                <span>支付宝</span>
+                <p><input type="text" placeholder="请输入支付宝账号" value={{=it.alipay}}></p>
+            </li>
+        </script>
+    </ul>
+
+</div>
+
+
+<div class="surebtn"><a href="#"><img src="../../image/surebtn.png" alt=""></a> </div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/signature.js"></script>
+<script type="text/javascript" src="../../script/set.js"></script>
+
+<script>
+    var mydata;//个人数据
+    // 通过dot.template调用你所写的dot.JS。
+    var tmpl = doT.template($("#mytmpl")[0].text);
+    if($api.getStorage('mydata')) {
+        mydata = $api.getStorage('mydata');
+        // 将数据扔进templ中。并在DIV中显示出来
+        $("body .passwordbx ul").html(tmpl(mydata));
+    }else {
+        mydata = {
+            "alipay": "",
+            "level": "",
+            "friendNum": "",
+            "sex": "",
+            "wechat": "",
+            "updateTime": "",
+            "userName": "",
+            "secondPwd": "",
+            "isShow": "",
+            "realName": "",
+            "password": "",
+            "phone": "",
+            "createTime": "",
+            "id": ""
+        };
+
+        // 将数据扔进templ中。并在DIV中显示出来
+        $("body .passwordbx ul").html(tmpl(mydata));
+    }
+
+
+
+
+
+    var token = tokenmake();
+    apiready = function () {
+        //激活tapmode属性
+        api.parseTapmode();
+        var userAccessToken = $api.getStorage('userAccessToken');
+        var qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken));
+        var loading = layer.open({type: 2});
+
+        api.ajax({
+            url: 'http://nongchang.65g.cn/index.php/Api/Center/getUser',
+            method: 'get',
+            dataType:'json',
+            data: {
+                values: {
+                    token: token,
+                    signature: qianming,
+                    userAccessToken: userAccessToken
+                }
+
+            }
+        }, function(ret, err) {
+            if (ret) {
+                layer.close(loading);
+                if (ret.status){
+                    $api.setStorage('mydata',ret.data);
+                    mydata = ret.data;
+                    $("body .passwordbx ul").html(tmpl(mydata));
+
+                }
+
+
+            } else {
+                layer.close(loading);
+                alert(err.msg);
+            }
+        });
+
+
+
+
+
+        //提交资料
+
+        $('body').on('click','.surebtn',function(){
+           var username = $('.username').find('input').val();
+           var realname = $('.realname').find('input').val();
+           var telphone = $('.telphone').find('input').val();
+           var sex = $('.sex').find('input:checked').val();
+           var weix = $('.weix').find('input').val();
+           var zhifu = $('.zhifu').find('input').val();
+            var loading1 = layer.open({type: 2});
+            qianming = signaturetik(('token='+token),('userAccessToken='+userAccessToken),('userName='+username),('realName='+realname),('sex='+sex),('phone='+telphone),('wechat='+weix),('alipay='+zhifu));
+            api.ajax({
+                url: 'http://nongchang.65g.cn/index.php/Api/Center/editUser',
+                method: 'POST',
+                dataType:'json',
+                data: {
+                    values: {
+                        token: token,
+                        signature: qianming,
+                        userAccessToken: userAccessToken,
+                        userName: username,
+                        realName: realname,
+                        sex: sex,
+                        phone: telphone,
+                        wechat: weix,
+                        alipay: zhifu
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    layer.close(loading1);
+                    if (ret.status){
+                        mydata.sex = sex;
+                        mydata.userName = username;
+                        mydata.realName = realname;
+                        mydata.phone = telphone;
+                        mydata.wechat = weix;
+                        mydata.alipay = zhifu;
+                        $api.setStorage('mydata',mydata);
+                        $api.setStorage('userAccname',mydata.userName);
+
+                        $("body .passwordbx ul").html(tmpl(mydata));
+
+                    }
+                    layer.open({
+                        content: ret.msg,
+                        skin: 'msg',
+                        time: 2
+                    });
+
+
+                } else {
+                    layer.close(loading);
+                    alert(err.msg);
+                }
+            });
+
+        });
+
+
+
+
+
+
+    };
+</script>
+</html>

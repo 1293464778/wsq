@@ -1,0 +1,257 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>登录</title>
+    <link rel="stylesheet" type="text/css" href="../layer/need/layer.css" />
+    <link rel="stylesheet" type="text/css" href="./../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="./../css/style.css" />
+    <script type="text/javascript" src="./../script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../layer/layer.js"></script>
+</head>
+<body>
+<div id="wrap">
+    <div id="main" class="loginbd">
+        <div class="loginbox">
+            <h2 class="tihead">云云果园阿里公司神奇游戏</h2>
+
+            <div class="loginform">
+                <ul>
+                    <li>
+                        <p><input class="userName" type="text" placeholder="用户名" value=""></p>
+                    </li>
+
+                    <li>
+                        <p><input class="password" type="password" placeholder="密码" value=""></p>
+                    </li>
+
+                    <li class="yanzhen clearfix">
+                        <p><input class="verify" type="number" placeholder="验证码"></p>
+                        <p><a href="javascript:void(0)" onclick="yancode()"><img id="idcode" src="" alt=""></a> </p>
+                    </li>
+                </ul>
+
+                <div class="btnlink"><a href="javascript:void(0)" onclick="loginapi()"><img
+                        src="../image/login_btn.png" alt=""></a> </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div id="layui-m-layer0" class="layui-m-layer layui-m-layer2 loadingnn" index="0" style="display: none">
+    <div class="layui-m-layershade"></div>
+    <div class="layui-m-layermain">
+        <div class="layui-m-layersection">
+            <div class="layui-m-layerchild  layui-m-anim-scale">
+                <div class="layui-m-layercont"><i></i><i class="layui-m-layerload"></i><i></i><p></p></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/signature.js"></script>
+<script type="text/javascript">
+
+    var token = tokenmake();
+    infoget(4);//获取重置果园提示
+    infoget(5);//定向出售提示
+    infoget(6);//获取发布站内信提示
+    infoget(8);//委托出售提示
+    yancode();
+
+
+    function loginapi(){
+
+        var userName = $('.userName').val();
+        var password = $('.password').val();
+        var verify = $('.verify').val();
+
+        if(userName.length==0){
+            var tishiw = layer.open({
+                content: '请填写用户名',
+                skin: 'msg',
+                time: 2 //2秒后自动关闭
+            });
+
+            setTimeout(function(){
+                layer.close(tishiw);
+            },2000);
+            yancode();
+            return;
+        }
+        if(password.length==0){
+
+            var tishiw = layer.open({
+                content: '请输入密码',
+                skin: 'msg',
+                time: 2 //2秒后自动关闭
+            });
+
+            setTimeout(function(){
+                layer.close(tishiw);
+            },2000);
+            yancode();
+            return;
+        }
+
+        if(verify.length==0){
+            var tishiw = layer.open({
+                content: '请输入验证码',
+                skin: 'msg',
+                time: 2 //2秒后自动关闭
+            });
+            setTimeout(function(){
+                layer.close(tishiw);
+            },2000);
+            return;
+        }
+
+        var qianming = signaturetik(('token='+token),('userName='+userName),('password='+password),('verify='+verify));
+
+        $('.loadingnn').show();
+
+        api.ajax({
+            url: 'http://nongchang.65g.cn/index.php/Api/Login/login',
+            method: 'get',
+            dataType:'json',
+            data: {
+                values: {
+                    token: token,
+                    signature: qianming,
+                    userName: userName,
+                    password: password,
+                    verify: verify
+                }
+
+            }
+        }, function(ret, err) {
+            //yancode();
+            if (ret) {
+                //yancode();
+                $('.loadingnn').hide();
+                if(ret.status==1){
+
+                    saveinfo(ret);
+                    $api.setStorage('userAccname',userName);
+                    $('.userName').val('');
+                    $('.password').val('');
+                    $('.verify').val('');
+
+                    homebopen();
+                }else {
+                    yancode();
+                    var tishi = layer.open({
+                        content: ret.msg,
+                        skin: 'msg',
+                        time: 1
+                    });
+                    setTimeout(function(){
+                        layer.close(tishi);
+                    },2000);
+                }
+
+
+            } else {
+                $('.loadingnn').hide();
+                alert(err.msg);
+            }
+        });
+
+
+
+    }
+
+
+    //存储基本信息
+    function saveinfo(ret){
+
+        //切换账号时清空数据
+        if($api.getStorage('id')){
+            var id_api = $api.getStorage('id');
+            if(id_api != ret.data.user.id){
+
+                $api.clearStorage();
+
+                api.writeFile({
+                    path: 'box://data.txt',
+                    data: ''
+                }, function(ret, err) {
+                    if (ret.status) {
+                        //成功
+                    } else {
+
+                    }
+                });
+
+            }
+        }else {
+            $api.setStorage('id',ret.data.user.id);
+        }
+
+        $api.setStorage('userAccessToken',ret.data.userAccessToken);
+        $api.setStorage('user',ret.data.user);
+        api.writeFile({
+            path: 'box://data.txt',
+            data: ret.data.userAccessToken
+        }, function(ret, err) {
+            if (ret.status) {
+                //成功
+            } else {
+
+            }
+        });
+
+
+
+
+
+
+    }
+
+
+
+    //跳转首页
+    function homebopen(){
+        api.openWin({
+            name: 'home',
+            url: '../index.html',
+            opaque: false,
+            vScrollBarEnabled: true
+        });
+    }
+
+
+    //验证码
+    function yancode(){
+        var srclink = 'http://nongchang.65g.cn/index.php/Api/Index/verify';
+        var tmp = Date.parse( new Date() ).toString();
+        tmp = tmp.substr(0,4);
+        srclink = srclink + '?'+ tmp;
+        $('#idcode').attr('src',srclink);
+        //alert(11)
+    }
+
+    //yancode();
+
+
+    var acode = 0;
+    $('.userName').focus(function(){
+        if(acode==0){
+            yancode();
+            acode = 1;
+        }
+
+    });
+
+
+
+
+
+</script>
+</html>
